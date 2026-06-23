@@ -1,0 +1,248 @@
+# =============================================================================
+# Literature Example Case: Dual-Population KDP Cooling Crystallization in a COBR
+# =============================================================================
+# Purpose:
+#   - Richer student-facing example than the single-population literature model
+#   - Separates the crystal phase into coarse seeded crystals and fines
+#   - Captures delayed seeded growth plus fines generation from secondary
+#     nucleation / attrition without the computational cost of a full DPBE
+#
+# Notes:
+#   - Temperature dependence is still introduced primarily through the
+#     surrogate solubility fit.
+#   - The dual-population kinetics are a pragmatic continuous-flow adaptation,
+#     informed by literature-style supersaturation closures and by the structure
+#     of the reference do-crystal PBE code copied into models/do-crystal/.
+# =============================================================================
+
+system_properties:
+  densities:
+    reaction_mixture: 1150.0
+    oil: 784.0
+    steel: 8000.0
+    crystal: 2338.0
+  heat_capacities:
+    reaction_mixture: 3900.0
+    oil: 2000.0
+    steel: 500.0
+  molar_weights:
+    solute: 0.13609
+
+reactor_properties:
+  reactor:
+    length: 18.0
+    inner_diameter: 0.0254
+    outer_diameter: 0.0320
+    cross_sectional_area: 0.00050671
+    volume: 0.00912078
+    number_tanks_in_series: 120
+
+  jackets:
+    - inlet: 0.0
+      outlet: 2.25
+      inner_diameter: 0.0400
+      outer_diameter: 0.0460
+      cross_sectional_area: 0.00093934
+      volume: 0.00211352
+    - inlet: 2.25
+      outlet: 6.75
+      inner_diameter: 0.0400
+      outer_diameter: 0.0460
+      cross_sectional_area: 0.00093934
+      volume: 0.00422703
+    - inlet: 6.75
+      outlet: 12.375
+      inner_diameter: 0.0400
+      outer_diameter: 0.0460
+      cross_sectional_area: 0.00093934
+      volume: 0.00528379
+    - inlet: 12.375
+      outlet: 18.0
+      inner_diameter: 0.0400
+      outer_diameter: 0.0460
+      cross_sectional_area: 0.00093934
+      volume: 0.00528379
+
+  thermostats:
+    - name: Thermostat_1
+      heating_power: 8000.0
+      cooling_power: 8000.0
+      max_vol_flow: 0.00010
+      volume: 0.0012
+      max_pressure: 250000.0
+      min_volume: 0.0010
+    - name: Thermostat_2
+      heating_power: 8000.0
+      cooling_power: 8000.0
+      max_vol_flow: 0.00010
+      volume: 0.0012
+      max_pressure: 250000.0
+      min_volume: 0.0010
+    - name: Thermostat_3
+      heating_power: 8000.0
+      cooling_power: 8000.0
+      max_vol_flow: 0.00010
+      volume: 0.0012
+      max_pressure: 250000.0
+      min_volume: 0.0010
+    - name: Thermostat_4
+      heating_power: 8000.0
+      cooling_power: 8000.0
+      max_vol_flow: 0.00010
+      volume: 0.0012
+      max_pressure: 250000.0
+      min_volume: 0.0010
+
+  microwaves: []
+  side_inlets:
+    - position: 2.45
+      name: Seed_inlet
+      concentrations:
+        fine_zeroth_moment: 0.0
+        fine_first_moment: 0.0
+        fine_second_moment: 0.0
+        coarse_zeroth_moment: 1.2e11
+        coarse_first_moment: 1.0e7
+        coarse_second_moment: 850.0
+        concentration_solute_dissolved: 0.0
+        concentration_solute_solid_fines: 0.0
+        concentration_solute_solid_coarse: 900.0
+
+measurements:
+  temperature_reactor:
+    positions: [0.0, 6.0, 12.0, 18.0]
+    names: [T_reactor_0m, T_reactor_6m, T_reactor_12m, T_reactor_18m]
+    measurement_noise: false
+  temperature_thermostat:
+    names: [T_thermostat_0, T_thermostat_1, T_thermostat_2, T_thermostat_3]
+    measurement_noise: false
+  temperature_setpoint:
+    names: [T_setpoint_thermostat_0, T_setpoint_thermostat_1, T_setpoint_thermostat_2, T_setpoint_thermostat_3]
+    measurement_noise: false
+  flow_inlet:
+    names: flow_inlet
+    measurement_noise: false
+
+model_parameters:
+  thermal:
+    heat_transfer:
+      reactor_heat_transfer_coefficient: 2200.0
+      jacket_heat_transfer_coefficient: 1200.0
+      heat_loss_coefficient: 12.0
+    pid_control:
+      proportional_gain: [9000.0, 9000.0, 9000.0, 9000.0]
+      integral_gain: [0.45, 0.45, 0.45, 0.45]
+      max_inflow_multipliers: [0.45, 0.45, 0.45, 0.45]
+      heating_power_avg_time_constant: [180.0, 180.0, 180.0, 180.0]
+
+  kinetic:
+    source: "Dual-population continuous-flow adaptation informed by Gunawan-style KDP kinetics"
+
+    fine_birth:
+      k_primary_birth: 5.0e5
+      exp_primary_birth: 5.0
+      k_secondary_birth: 1.6e2
+      exp_secondary_birth: 2.4
+      k_attrition_birth: 12.0
+      exp_attrition_birth: 1.7
+      nucleation_size_fines: 4.5e-6
+
+    growth:
+      k_growth_fines: 5.5e-7
+      exp_growth_fines: 1.7
+      k_growth_coarse: 7.0e-6
+      exp_growth_coarse: 2.0
+
+    population_exchange:
+      k_attrition_mass: 1.0e-3
+      exp_attrition_mass: 1.4
+      k_attrition_moments: 0.01
+
+    solubility:
+      A: 290.0
+      B: 0.0280
+
+    shape_factor:
+      k_v: 0.60
+
+simulation_settings:
+  solver:
+    integration_tool: cvodes
+    abstol: 1.0e-8
+    reltol: 1.0e-8
+    t_step: 60.0
+
+  smoothing:
+    smoothing_factor_heating: 0.01
+    smoothing_factor_integral: 0.001
+    anti_windup_factor: 0.99999
+    smoothing_parameter: 1.0e-6
+
+initial_conditions:
+  warm_up: false
+  temperature_reactor:
+    - [0.0, 348.15]
+    - [18.0, 293.15]
+  temperature_jacket:
+    - [0.0, 348.15]
+    - [18.0, 293.15]
+  temperature_inner_wall:
+    - [0.0, 348.15]
+    - [18.0, 293.15]
+  temperature_outer_wall:
+    - [0.0, 348.15]
+    - [18.0, 293.15]
+  temperature_thermostat: [363.15, 338.15, 313.15, 293.15]
+  integral_term: [0.0, 0.0, 0.0, 0.0]
+  heating_power_avg: [0.0, 0.0, 0.0, 0.0]
+
+  fine_zeroth_moment:
+    - [0.0, 0.0]
+    - [18.0, 0.0]
+  fine_first_moment:
+    - [0.0, 0.0]
+    - [18.0, 0.0]
+  fine_second_moment:
+    - [0.0, 0.0]
+    - [18.0, 0.0]
+  coarse_zeroth_moment:
+    - [0.0, 0.0]
+    - [18.0, 0.0]
+  coarse_first_moment:
+    - [0.0, 0.0]
+    - [18.0, 0.0]
+  coarse_second_moment:
+    - [0.0, 0.0]
+    - [18.0, 0.0]
+  concentration_solute_dissolved:
+    - [0.0, 2600.0]
+    - [18.0, 2600.0]
+  concentration_solute_solid_fines:
+    - [0.0, 0.0]
+    - [18.0, 0.0]
+  concentration_solute_solid_coarse:
+    - [0.0, 0.0]
+    - [18.0, 0.0]
+
+operating_conditions:
+  inputs:
+    flow_inlet: 4.1667e-6
+    T_setpoint_thermostats: [363.15, 338.15, 313.15, 293.15]
+    flow_side_inlets: [4.2e-8]
+    power_microwaves: []
+
+  tvp:
+    T_flow_inlet: 348.15
+    T_environment: 293.15
+    T_side_inlets: [298.15]
+
+  chemistry_inflow:
+    fine_zeroth_moment: 0.0
+    fine_first_moment: 0.0
+    fine_second_moment: 0.0
+    coarse_zeroth_moment: 0.0
+    coarse_first_moment: 0.0
+    coarse_second_moment: 0.0
+    concentration_solute_dissolved: 2600.0
+    concentration_solute_solid_fines: 0.0
+    concentration_solute_solid_coarse: 0.0

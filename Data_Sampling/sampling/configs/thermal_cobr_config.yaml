@@ -1,0 +1,198 @@
+system_properties:
+  densities:
+    reaction_mixture: 1150.0
+    oil: 784.0
+    steel: 8000.0
+  heat_capacities:
+    reaction_mixture: 3900.0
+    oil: 2000.0
+    steel: 500.0
+
+reactor_properties:
+  reactor:
+    length: 18.0
+    inner_diameter: 0.0254
+    outer_diameter: 0.0320
+    cross_sectional_area: 0.00050671
+    volume: 0.00912078
+    number_tanks_in_series: 120
+
+  jackets:
+    - inlet: 0.0
+      outlet: 2.25
+      inner_diameter: 0.0400
+      outer_diameter: 0.0460
+      cross_sectional_area: 0.00093934
+      volume: 0.00211352
+    - inlet: 2.25
+      outlet: 4.5
+      inner_diameter: 0.0400
+      outer_diameter: 0.0460
+      cross_sectional_area: 0.00093934
+      volume: 0.00211352
+    - inlet: 4.5
+      outlet: 6.75
+      inner_diameter: 0.0400
+      outer_diameter: 0.0460
+      cross_sectional_area: 0.00093934
+      volume: 0.00211352
+    - inlet: 6.75
+      outlet: 9.0
+      inner_diameter: 0.0400
+      outer_diameter: 0.0460
+      cross_sectional_area: 0.00093934
+      volume: 0.00211352
+    - inlet: 9.0
+      outlet: 11.25
+      inner_diameter: 0.0400
+      outer_diameter: 0.0460
+      cross_sectional_area: 0.00093934
+      volume: 0.00211352
+    - inlet: 11.25
+      outlet: 13.5
+      inner_diameter: 0.0400
+      outer_diameter: 0.0460
+      cross_sectional_area: 0.00093934
+      volume: 0.00211352
+    - inlet: 13.5
+      outlet: 15.75
+      inner_diameter: 0.0400
+      outer_diameter: 0.0460
+      cross_sectional_area: 0.00093934
+      volume: 0.00211352
+    - inlet: 15.75
+      outlet: 18.0
+      inner_diameter: 0.0400
+      outer_diameter: 0.0460
+      cross_sectional_area: 0.00093934
+      volume: 0.00211352
+
+  thermostats:
+    - name: Thermostat_1
+      heating_power: 8000.0
+      cooling_power: 8000.0
+      max_vol_flow: 0.00006
+      volume: 0.0012
+      max_pressure: 250000.0
+      min_volume: 0.0010
+    - name: Thermostat_2
+      heating_power: 8000.0
+      cooling_power: 8000.0
+      max_vol_flow: 0.00006
+      volume: 0.0012
+      max_pressure: 250000.0
+      min_volume: 0.0010
+    - name: Thermostat_3
+      heating_power: 8000.0
+      cooling_power: 8000.0
+      max_vol_flow: 0.00006
+      volume: 0.0012
+      max_pressure: 250000.0
+      min_volume: 0.0010
+    - name: Thermostat_4
+      heating_power: 8000.0
+      cooling_power: 8000.0
+      max_vol_flow: 0.00006
+      volume: 0.0012
+      max_pressure: 250000.0
+      min_volume: 0.0010
+    - name: Thermostat_5
+      heating_power: 8000.0
+      cooling_power: 8000.0
+      max_vol_flow: 0.00006
+      volume: 0.0012
+      max_pressure: 250000.0
+      min_volume: 0.0010
+    - name: Thermostat_6
+      heating_power: 8000.0
+      cooling_power: 8000.0
+      max_vol_flow: 0.00006
+      volume: 0.0012
+      max_pressure: 250000.0
+      min_volume: 0.0010
+    - name: Thermostat_7
+      heating_power: 8000.0
+      cooling_power: 8000.0
+      max_vol_flow: 0.00006
+      volume: 0.0012
+      max_pressure: 250000.0
+      min_volume: 0.0010
+    - name: Thermostat_8
+      heating_power: 8000.0
+      cooling_power: 8000.0
+      max_vol_flow: 0.00006
+      volume: 0.0012
+      max_pressure: 250000.0
+      min_volume: 0.0010
+
+  microwaves: []
+  side_inlets: []
+
+measurements:
+  temperature_reactor:
+    positions: [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0]
+    names: [T_reactor_2m, T_reactor_4m, T_reactor_6m, T_reactor_8m, T_reactor_10m, T_reactor_12m, T_reactor_14m, T_reactor_16m, T_reactor_18m]
+    measurement_noise: false
+  temperature_thermostat:
+    positions: [2.25, 4.5, 6.75, 9.0, 11.25, 13.5, 15.75, 18.0]
+    names: [T_thermostat_2.25m, T_thermostat_4.5m, T_thermostat_6.75m, T_thermostat_9.0m, T_thermostat_11.25m, T_thermostat_13.5m, T_thermostat_15.75m, T_thermostat_18.0m]
+    measurement_noise: false
+  temperature_setpoint:
+    positions: [2.25, 4.5, 6.75, 9.0, 11.25, 13.5, 15.75, 18.0]
+    names: [T_setpoint_2.25m, T_setpoint_4.5m, T_setpoint_6.75m, T_setpoint_9.0m, T_setpoint_11.25m, T_setpoint_13.5m, T_setpoint_15.75m, T_setpoint_18.0m]
+    measurement_noise: false
+  flow_inlet:
+    names: flow_inlet
+    measurement_noise: false
+
+model_parameters:
+  thermal:
+    heat_transfer:
+      reactor_heat_transfer_coefficient: 2200.0
+      jacket_heat_transfer_coefficient: 1200.0
+      heat_loss_coefficient: 12.0
+    pid_control:
+      proportional_gain: [9000.0, 9000.0, 9000.0, 9000.0, 9000.0, 9000.0, 9000.0, 9000.0]
+      integral_gain: [0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45]
+      max_inflow_multipliers: [0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45]
+      heating_power_avg_time_constant: [180.0, 180.0, 180.0, 180.0, 180.0, 180.0, 180.0, 180.0]
+
+simulation_settings:
+  solver:
+    integration_tool: cvodes
+    abstol: 1.0e-8
+    reltol: 1.0e-8
+    t_step: 60.0
+
+  smoothing:
+    smoothing_factor_heating: 0.01
+    smoothing_factor_integral: 0.001
+    anti_windup_factor: 0.99999
+    smoothing_parameter: 1.0e-6
+
+initial_conditions:
+  warm_up: false
+  temperature_reactor:
+    - [0.0, 348.15]
+    - [18.0, 293.15]
+  temperature_jacket:
+    - [0.0, 348.15]
+    - [18.0, 293.15]
+  temperature_inner_wall:
+    - [0.0, 348.15]
+    - [18.0, 293.15]
+  temperature_outer_wall:
+    - [0.0, 348.15]
+    - [18.0, 293.15]
+  temperature_thermostat: [363.15, 353.15, 343.15, 333.15, 323.15, 313.15, 303.15, 293.15]
+  integral_term: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  heating_power_avg: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+operating_conditions:
+  inputs:
+    flow_inlet: 4.1667e-6
+    T_setpoint_thermostats: [363.15, 353.15, 343.15, 333.15, 323.15, 313.15, 303.15, 293.15]
+
+  tvp:
+    T_flow_inlet: 348.15
+    T_environment: 293.15

@@ -1,0 +1,51 @@
+# ---- rename this file to  .gitignore  in the repo root ----
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# Virtual envs / package managers
+.venv/
+venv/
+env/
+uv.lock          # keep ONLY if you want to omit; usually fine to commit. Remove this line to track it.
+
+# ML artifacts & data (do NOT publish large/proprietary data or trained weights)
+*.h5
+*.hdf5
+*.dat
+*.npy
+*.npz
+*.ckpt
+*.pt
+*.pth
+Models/
+Models_*/
+datasets/
+data/
+lightning_logs/
+runs/
+tensorboard/
+wandb/
+Theory/
+plans/
+COBR/
+COBR_legacy/
+
+# Editor / OS
+.vscode/
+.idea/
+.obsidian/
+.DS_Store
+Thumbs.db
+
+# Secrets — never commit
+.env
+*.key
+*.pem
+credentials*
+# Training run telemetry (TensorBoard / Lightning CSV logs)
+**/logs/
+*.tfevents.*

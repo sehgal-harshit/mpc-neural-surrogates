@@ -1,0 +1,86 @@
+# NARX dataset configuration for the thermal COBR dataset (Run_1).
+# Predicts reactor temperatures, thermostat temperatures, and heating power one step ahead.
+#
+# Outputs (25): T_reactor_meas (9), T_thermostat_meas (8), heating_power_avg (8)
+# Inputs:       flow_inlet (u/), T_setpoint_thermostats (aux/, 8 channels) — delayed by 1 step
+#
+# heating_power_avg is PREDICTED ONLY — not used as autoregressive feature input.
+# integral_term is EXCLUDED from labels — provided by PI co-simulator at rollout time.
+#
+# n_past = 146  →  residence time: 146 × 15 s = 2190 s ≈ τ_res (V=0.00912 m³, Q=4.167e-6 m³/s)
+# delay  = 1   →  inputs applied at t, effect observed at t+1
+#
+# Feature vector layout (3796-D):
+#   [0:1314]     T_reactor_meas     (aux, 146×9)
+#   [1314:2482]  T_thermostat_meas  (aux, 146×8)
+#   [2482:2628]  flow_inlet window  (u,   146×1)
+#   [2628:3796]  T_setpoint window  (aux, 146×8)
+
+source_file: 'Run_1/data_sets/21_05_2026/thermal_cobr_raw_data.h5'
+output_file: 'Run_1/data_sets/21_05_2026/narx/thermal_narx_dataset_3.h5'
+n_workers: 17
+
+feature_groups:
+
+  # ── State/output history (what the reactor was doing) ──────────────────────
+  narx_state_features:
+
+    # Reactor temperatures at all 9 measurement positions
+    - name: T_reactor_meas
+      type: aux
+      n_past: 146
+      delay: 0
+      narx_type: feature
+
+    # Thermostat temperatures (8 zones)
+    - name: T_thermostat_meas
+      type: aux
+      n_past: 146
+      delay: 0
+      narx_type: feature
+
+    # Control inputs — delayed by 1 (applied at t, effect at t+1)
+    - name: flow_inlet
+      type: u
+      n_past: 146
+      delay: 1
+      narx_type: input
+
+    # All 8 thermostat setpoints stacked (from aux/)
+    - name: T_setpoint_thermostats
+      type: aux
+      n_past: 146
+      delay: 1
+      narx_type: input
+
+  # ── Current control inputs (for models that take u_t separately) ───────────
+  input_features:
+
+    - name: flow_inlet
+      type: u
+      narx_type: input
+
+    # All 8 thermostat setpoints stacked (from aux/)
+    - name: T_setpoint_thermostats
+      type: aux
+      narx_type: input
+
+# ── Labels: what to predict (one timestep ahead) ────────────────────────────
+labels:
+  - name: T_reactor_meas
+    type: aux
+    narx_type: feature
+
+  - name: T_thermostat_meas
+    type: aux
+    narx_type: feature
+
+  - name: heating_power_avg
+    type: x
+    narx_type: feature
+
+  - name: T_reactor
+    type: x
+    reduce: max
+    narx_type: feature
+

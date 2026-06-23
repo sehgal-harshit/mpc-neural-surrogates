@@ -1,0 +1,192 @@
+simulation:
+  t_final: 36000.0
+  dt: 15.0
+  warmup_time: 3600.0
+
+states:
+  T_reactor:
+    sampler: "UniformSampler"
+    hyperparameters:
+      bounds: [292.0, 365.0]
+
+  T_jacket:
+    sampler: "UniformSampler"
+    hyperparameters:
+      bounds: [292.0, 365.0]
+
+  T_inner_wall:
+    sampler: "UniformSampler"
+    hyperparameters:
+      bounds: [292.0, 365.0]
+
+  T_outer_wall:
+    sampler: "UniformSampler"
+    hyperparameters:
+      bounds: [292.0, 365.0]
+
+  T_thermostat:
+    sampler: "UniformSampler"
+    hyperparameters:
+      bounds: [[292.0, 292.0, 292.0, 292.0, 292.0, 292.0, 292.0, 292.0], [366.0, 366.0, 366.0, 366.0, 366.0, 366.0, 366.0, 366.0]]
+
+  integral_term:
+    sampler: "UniformSampler"
+    hyperparameters:
+      bounds: [0.0, 0.2]
+
+  heating_power_avg:
+    sampler: "UniformSampler"
+    hyperparameters:
+      bounds: [0.0, 8000.0]
+
+input_groups:
+  cobr_inputs:
+    inputs:
+      [
+        flow_inlet,
+        T_setpoint_thermostat_0,
+        T_setpoint_thermostat_1,
+        T_setpoint_thermostat_2,
+        T_setpoint_thermostat_3,
+        T_setpoint_thermostat_4,
+        T_setpoint_thermostat_5,
+        T_setpoint_thermostat_6,
+        T_setpoint_thermostat_7,
+      ]
+    sampler: "CoupledRandomWalkSampler"
+    hyperparameters:
+      bounds:
+        [
+          [0.0000035, 0.0000048],
+          [292.0, 365.0],
+          [292.0, 365.0],
+          [292.0, 365.0],
+          [292.0, 365.0],
+          [292.0, 365.0],
+          [292.0, 365.0],
+          [292.0, 365.0],
+          [292.0, 365.0],
+        ]
+      min_max_change:
+        [
+          [-0.0000002, 0.0000002],
+          [-1.5, 1.5],
+          [-1.5, 1.5],
+          [-1.5, 1.5],
+          [-1.5, 1.5],
+          [-1.5, 1.5],
+          [-1.5, 1.5],
+          [-1.5, 1.5],
+          [-1.5, 1.5],
+        ]
+      base_change_probability: [0.05, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15]
+      initial_value_strategy: ["center", "center", "center", "center", "center", "center", "center", "center", "center"]
+      coupling_config:
+        flow_inlet:
+          T_setpoint_thermostat_0:
+            boost_factor: 2.0
+            decay_timesteps: 1
+            decay_factor: 0.8
+          T_setpoint_thermostat_1:
+            boost_factor: 2.0
+            decay_timesteps: 1
+            decay_factor: 0.8
+          T_setpoint_thermostat_2:
+            boost_factor: 2.0
+            decay_timesteps: 1
+            decay_factor: 0.8
+          T_setpoint_thermostat_3:
+            boost_factor: 2.0
+            decay_timesteps: 1
+            decay_factor: 0.8
+          T_setpoint_thermostat_4:
+            boost_factor: 2.0
+            decay_timesteps: 1
+            decay_factor: 0.8
+          T_setpoint_thermostat_5:
+            boost_factor: 2.0
+            decay_timesteps: 1
+            decay_factor: 0.8
+          T_setpoint_thermostat_6:
+            boost_factor: 2.0
+            decay_timesteps: 1
+            decay_factor: 0.8
+          T_setpoint_thermostat_7:
+            boost_factor: 2.0
+            decay_timesteps: 1
+            decay_factor: 0.8
+
+time_varying_parameters:
+  T_flow_inlet:
+    sampler: "ConstantSampler"
+    hyperparameters:
+      value: 348.15
+
+  T_environment:
+    sampler: "ConstantSampler"
+    hyperparameters:
+      value: 293.15
+
+constant_parameters:
+  h_reactor_group:
+    parameters: [h_reactor]
+    sampler: "NormalSampler"
+    hyperparameters:
+      mean: 2200.0
+      std_dev: 440.0
+
+  h_jacket_group:
+    parameters: [h_jacket]
+    sampler: "ConstantSampler"
+    hyperparameters:
+      value: 1200.0
+
+  h_loss_group:
+    parameters: [h_loss]
+    sampler: "NormalSampler"
+    hyperparameters:
+      mean: 12.0
+      std_dev: 2.4
+
+  K_p:
+    sampler: "ConstantSampler"
+    hyperparameters:
+      value: [9000.0, 9000.0, 9000.0, 9000.0, 9000.0, 9000.0, 9000.0, 9000.0]
+
+  K_i:
+    sampler: "ConstantSampler"
+    hyperparameters:
+      value: [0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45]
+
+  max_inflow_multipliers:
+    sampler: "ConstantSampler"
+    hyperparameters:
+      value: [0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45]
+
+  max_vol_flow_thermostats:
+    sampler: "ConstantSampler"
+    hyperparameters:
+      value: [0.00006, 0.00006, 0.00006, 0.00006, 0.00006, 0.00006, 0.00006, 0.00006]
+
+  heating_power_avg_time_constant:
+    sampler: "ConstantSampler"
+    hyperparameters:
+      value: [180.0, 180.0, 180.0, 180.0, 180.0, 180.0, 180.0, 180.0]
+
+  density_group:
+    parameters: [rho_reaction_mixture, rho_oil, rho_steel]
+    sampler: "ConstantSampler"
+    hyperparameters:
+      value: [1150.0, 784.0, 8000.0]
+
+  heat_capacity_group:
+    parameters: [cp_reaction_mixture, cp_oil, cp_steel]
+    sampler: "ConstantSampler"
+    hyperparameters:
+      value: [3900.0, 2000.0, 500.0]
+
+  smoothing_group:
+    parameters: [smoothing_factor_heating, anti_windup_factor, smoothing_factor_integral, smoothing_parameter]
+    sampler: "ConstantSampler"
+    hyperparameters:
+      value: [0.01, 0.99999, 0.001, 0.000001]
