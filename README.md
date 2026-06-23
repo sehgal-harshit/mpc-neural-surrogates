@@ -2,8 +2,6 @@
 
 Master's thesis — **M.Sc. Automation & Robotics, TU Dortmund** (supervised by Niklas Kemmerling).
 
-> 🧹 **Before pushing:** the code is yours to publish. Just keep large/raw datasets and trained weights out of the repo (the included `.gitignore` handles this) and don't commit the reference paper PDF.
-
 ## What it does
 
 Model Predictive Control (MPC) is powerful but expensive: every control step re-solves an optimization over a physical model, and high-fidelity first-principles models are often too slow for real-time use. This thesis develops a **generalizable framework that replaces the expensive model with a learned neural-network surrogate** embedded directly in the MPC loop — keeping control performance while cutting solve times by orders of magnitude.
